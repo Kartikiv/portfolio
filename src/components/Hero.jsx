@@ -17,7 +17,10 @@ const Hero = () => {
           Building Scalable Systems & Intelligent Solutions
         </motion.h2>
         <motion.p className="hero-description" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.6 }}>
-          Masters student specializing in distributed systems, backend architecture, and AI-powered automation. Experienced in building high-performance services that process millions of events while maintaining exceptional reliability and scalability.
+            Software Engineer with 3+ years of industry experience and a clear focus on delivering systems that scale in real-world environments. Drawn to
+            hard problems at the intersection of systems and machine learning, with a focus on building adaptive, resilient platforms. Past experience includes
+            building and maintaining large scale distributed systems that support entire Australian healthcare and enabling data processing for machine
+            learning.
         </motion.p>
         <motion.div className="hero-cta" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.7 }}>
           <a href="#projects" className="btn btn-primary">View My Work <ExternalLink size={18} /></a>
