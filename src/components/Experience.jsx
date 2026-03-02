@@ -51,28 +51,19 @@ const Experience = () => {
                 <TimelineItem
                     title="Software Engineer"
                     company="Drucare"
-                    period="Jul 2021 – Jul 2024"
+                    period="Jun 2021 – Jul 2024"
                     location="Hyderabad, India"
                     achievements={[
-                        'Architected and scaled distributed, event-driven backend systems for health-data telemetry ingestion, processing ~1M+ events/day',
-                        'Improved p95 API latency by ~30% through redesigning critical request paths and optimizing concurrency control',
-                        'Designed fault-tolerant architectures using asynchronous messaging, preventing cascading failures during outages',
-                        'Built Angular-based frontend applications enabling real-time visualization of telemetry data',
-                        'Maintained cloud-native services on AWS with 99.9% availability and horizontal scalability'
+                        'Built a 0→1 large-scale distributed ingestion pipeline processing 1M+ daily events from healthcare' +
+                        ' telemetry sensors across multiple hospitals across the globe.',
+                        'Designed a plug-and-play architecture using Kafka, Flink, Spark, Cassandra and data lakes like Iceberg to support complex event ' +
+                        'processing for use cases ranging from real-time diagnostics to early risk prediction',
+                        'Improved processing throughput by 30% by implementing cross–data center replication strategies, optimizing concurrency controls, and reducing shared ' +
+                        'resource contention, resulting in more resilient and scalable data pipelines.',
+                        'Built and instrumented real-time telemetry dashboards exposing ingestion lag and pipeline health, reducing MTTD and accelerating on-call incident resolution.',
+                        'Deployed and scaled cloud-native services on AWS with 99.9% availability, enabling elastic load handling, fault recovery, and zero-downtime rollouts'
                     ]}
                     delay={0.1}
-                />
-                <TimelineItem
-                    title="Software Engineer Intern"
-                    company="Safertek"
-                    period="Feb 2021 - Jul 2021"
-                    location="Hyderabad, India"
-                    achievements={[
-                        'Worked with databases including MariaDB, Oracle, SQL Server, and MySQL',
-                        'Operated in Agile TDD environment using Git, Jira, Jenkins, and Maven',
-                        'Implemented software testing processes for components used by 90% of the population'
-                    ]}
-                    delay={0.2}
                 />
                 <TimelineItem
                     title="Software Development Engineer"
@@ -80,9 +71,14 @@ const Experience = () => {
                     period="Feb 2020 - Feb 2021"
                     location="Hyderabad, India"
                     achievements={[
-                        'Designed and trained multi-layer neural networks using gradient descent optimization',
-                        'Achieved 98% error detection accuracy in machine learning models',
-                        'Led Gmail analysis project using Python and Pandas'
+                        'Reduced downstream model failures by 35% by designing and deploying custom validation pipelines that enforced schema constraints, anomaly detection, and automated data quality checks across 500K+ weekly records, ' +
+                        'preventing corrupt inputs from reaching training and inference systems.',
+                        'Cut annotation turnaround time by 25% and reduced rework by standardizing data schemas, introducing validation tooling,' +
+                        ' and eliminating ambiguous formats, enabling 10+ engineers to produce consistent, machine-ready datasets on the first pass.',
+                        'Reduced false positives by 18% by conducting root-cause analysis on model failures, surfacing recurring edge cases,' +
+                        ' and hardening labeling guidelines and preprocessing pipelines to eliminate systematic misclassifications.',
+                        'Increased annotation throughput by 40% while maintaining 99% consistency by automating quality checks, enforcing rule-based validations, and ' +
+                        'streamlining workflow steps to eliminate manual review bottlenecks in high-volume data pipelines.'
                     ]}
                     delay={0.3}
                 />

@@ -49,26 +49,36 @@ const Projects = () => {
             <div className="projects-grid">
                 <ProjectCard
                     icon={<Brain />}
-                    title="Multi-Agent RL Code Debugger"
+                    title="Multi-Agent Reinforcement Learning for Interactive Code Debugging with Human Feedback and Memory"
                     tech="Python, Reinforcement Learning, NLP, PPO"
                     description="RANLP 2025 Publication"
                     highlights={[
-                        'Designed AI-powered debugging platform combining multi-agent RL, NLP, and long-term memory',
-                        'Achieved ~92% precision for syntax errors and ~78% for logic errors using PPO-based agents',
-                        'Reduced manual debugging steps by ~41% through ranked candidate code fixes',
-                        'Implemented feedback-driven learning loops improving accuracy by ~18%'
+                        'Designed and deployed a production-grade multi-agent reinforcement learning system that ' +
+                        'autonomously detects, prioritizes, and remediates code defects using transformer-based code embeddings and a vector-indexed long-term memory store.',
+                        'Implemented Proximal Policy Optimization (PPO)–based agents that achieved 92% precision in syntax error detection ' +
+                        'and 78% precision in logical error detection, outperforming baseline static analysis tools and rule-based approaches',
+                        'Engineered a human-in-the-loop feedback pipeline that continuously retrains agents from user corrections, improving fix accuracy by 18% over time',
+                        'Built a vector-backed persistent memory module that captured failure patterns, fixes,' +
+                        ' and contextual embeddings, preventing repeated errors and reducing recurrence by 33%.',
+                        'Designed the platform as a modular, plug-and-play architecture, enabling new agents, heuristics, and debugging strategies to be integrated without' +
+                        'retraining the entire system.',
+                        'Eliminated ~$10K in third-party annual licensing costs, by becoming the default code assistant within the CS Departments Fab Lab, supporting' +
+                        ' coursework and projects across multiple programming and fabrication languages.'
                     ]}
                     delay={0.1}
                 />
                 <ProjectCard
                     icon={<Database />}
-                    title="Crop Yield Prediction System"
-                    tech="Data Analytics, Machine Learning"
-                    description="Agriculture optimization platform"
+                    title="WebRTC Peer-to-Peer Real-Time Messaging and File Transfer System"
+                    tech="Distributed Systems"
+                    description="Messaging platform"
                     highlights={[
-                        'Integrated advanced data analytics for accurate crop yield prediction',
-                        'Enabled data-driven decision making for farmers',
-                        'Optimized prediction models for maximum accuracy'
+                        ' Built a real-time P2P communication app for college students supporting chat, video/audio calls, and collaboration,' +
+                        ' designed to scale to billions of concurrent users',
+                        ' Engineered a decentralized file sharing system where each peer acts as a storage node, ' +
+                        'enabling real-time sharing of notes, assignments, and large study materials without central storage',
+                        'Integrated an AI assistant that translates messages, finds citations,' +
+                        ' and summarizes lecture notes and PDFs in real time to accelerate learning and cross-language collaboration'
                     ]}
                     delay={0.2}
                 />
