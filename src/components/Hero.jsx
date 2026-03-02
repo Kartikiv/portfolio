@@ -23,7 +23,8 @@ const Hero = () => {
             learning.
         </motion.p>
         <motion.div className="hero-cta" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.7 }}>
-          <a href="#projects" className="btn btn-primary">View My Work <ExternalLink size={18} /></a>
+          <a href="#projects" className="btn btn-primary">View My Projects <ExternalLink size={18} /></a>
+            <a href="#experience" className="btn btn-primary">View My Experience <ExternalLink size={18} /></a>
           <a href="#contact" className="btn btn-secondary">Get In Touch <Mail size={18} /></a>
         </motion.div>
       </div>
