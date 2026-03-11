@@ -66,8 +66,8 @@ const Experience = () => {
                     delay={0.1}
                 />
                 <TimelineItem
-                    title="Software Development Engineer"
-                    company="AtRite Pvt Ltd"
+                    title="Software Development Engineer Intern"
+                    company="Amazon "
                     period="Feb 2020 - Feb 2021"
                     location="Hyderabad, India"
                     achievements={[
