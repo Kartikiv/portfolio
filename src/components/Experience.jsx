@@ -1,90 +1,148 @@
-// ==================================================
-// File: src/components/Experience.jsx
-// ==================================================
-import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Plus, X } from 'lucide-react';
 import Section from './Section';
+import EditableText from './EditableText';
+import { useEdit } from '../context/EditContext';
 
-const TimelineItem = ({ title, company, period, location, achievements, delay }) => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-50px" });
+const TimelineItem = ({ item, itemIdx, onRemove }) => {
+  const { getSection, updateField, editMode } = useEdit();
 
-    return (
-        <motion.div
-            ref={ref}
-            className="timeline-item"
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-            transition={{ duration: 0.6, delay }}
-        >
-            <div className="timeline-marker" />
-            <div className="timeline-content">
-                <div className="timeline-header">
-                    <div>
-                        <h3 className="timeline-title">{title}</h3>
-                        <div className="timeline-company">{company}</div>
-                    </div>
-                    <div className="timeline-period">{period}</div>
-                </div>
-                {location && <div style={{ color: 'var(--color-text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>{location}</div>}
-                <ul className="timeline-achievements">
-                    {achievements.map((achievement, idx) => (
-                        <motion.li
-                            key={idx}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                            transition={{ duration: 0.4, delay: delay + (idx * 0.1) }}
-                        >
-                            {achievement}
-                        </motion.li>
-                    ))}
-                </ul>
+  const onChangeField = (field, val) => {
+    const data = getSection('experience');
+    updateField('experience', { ...data, items: data.items.map((it, i) => i === itemIdx ? { ...it, [field]: val } : it) });
+  };
+
+  const onChangeAchievement = (achIdx, val) => {
+    const data = getSection('experience');
+    updateField('experience', {
+      ...data,
+      items: data.items.map((it, i) => i === itemIdx
+        ? { ...it, achievements: it.achievements.map((a, ai) => ai === achIdx ? val : a) }
+        : it),
+    });
+  };
+
+  const addAchievement = () => {
+    const data = getSection('experience');
+    updateField('experience', {
+      ...data,
+      items: data.items.map((it, i) => i === itemIdx
+        ? { ...it, achievements: [...it.achievements, 'Describe your achievement here.'] }
+        : it),
+    });
+  };
+
+  const removeAchievement = (achIdx) => {
+    const data = getSection('experience');
+    updateField('experience', {
+      ...data,
+      items: data.items.map((it, i) => i === itemIdx
+        ? { ...it, achievements: it.achievements.filter((_, ai) => ai !== achIdx) }
+        : it),
+    });
+  };
+
+  return (
+    <motion.div className="timeline-item"
+      initial={{ opacity: 0, x: -30 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, amount: 0.05 }}
+      transition={{ duration: 0.6, delay: itemIdx * 0.1 }}
+    >
+      {editMode && (
+        <button className="edit-remove-item-btn" onClick={onRemove} title="Remove job">
+          <X size={14} /> Remove Job
+        </button>
+      )}
+      <div className="timeline-marker" />
+      <div className="timeline-content">
+        <div className="timeline-header">
+          <div>
+            <h3 className="timeline-title">
+              <EditableText value={item.title} onChange={(v) => onChangeField('title', v)} />
+            </h3>
+            <div className="timeline-company">
+              <EditableText value={item.company} onChange={(v) => onChangeField('company', v)} />
             </div>
-        </motion.div>
-    );
+          </div>
+          <div className="timeline-period">
+            <EditableText value={item.period} onChange={(v) => onChangeField('period', v)} />
+          </div>
+        </div>
+        {(item.location || editMode) && (
+          <div style={{ color: 'var(--color-text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>
+            <EditableText value={item.location || ''} onChange={(v) => onChangeField('location', v)} />
+          </div>
+        )}
+        <ul className="timeline-achievements">
+          {item.achievements.map((ach, achIdx) => (
+            <motion.li key={achIdx} className="timeline-achievement-row"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.05 }}
+              transition={{ duration: 0.4, delay: achIdx * 0.05 }}
+            >
+              <EditableText value={ach} onChange={(v) => onChangeAchievement(achIdx, v)} multiline />
+              {editMode && (
+                <button className="edit-remove-inline-btn" onClick={() => removeAchievement(achIdx)} title="Remove bullet">
+                  <X size={12} />
+                </button>
+              )}
+            </motion.li>
+          ))}
+          {editMode && (
+            <li className="edit-add-row">
+              <button className="edit-add-btn" onClick={addAchievement}>
+                <Plus size={13} /> Add bullet
+              </button>
+            </li>
+          )}
+        </ul>
+      </div>
+    </motion.div>
+  );
 };
 
 const Experience = () => {
-    return (
-        <Section label="CAREER" title="Professional Experience" id="experience">
-            <div className="timeline">
-                <TimelineItem
-                    title="Software Engineer"
-                    company="Drucare"
-                    period="Jun 2021 – Jul 2024"
-                    location="Hyderabad, India"
-                    achievements={[
-                        'Built a 0→1 large-scale distributed ingestion pipeline processing 1M+ daily events from healthcare' +
-                        ' telemetry sensors across multiple hospitals across the globe.',
-                        'Designed a plug-and-play architecture using Kafka, Flink, Spark, Cassandra and data lakes like Iceberg to support complex event ' +
-                        'processing for use cases ranging from real-time diagnostics to early risk prediction',
-                        'Improved processing throughput by 30% by implementing cross–data center replication strategies, optimizing concurrency controls, and reducing shared ' +
-                        'resource contention, resulting in more resilient and scalable data pipelines.',
-                        'Built and instrumented real-time telemetry dashboards exposing ingestion lag and pipeline health, reducing MTTD and accelerating on-call incident resolution.',
-                        'Deployed and scaled cloud-native services on AWS with 99.9% availability, enabling elastic load handling, fault recovery, and zero-downtime rollouts'
-                    ]}
-                    delay={0.1}
-                />
-                <TimelineItem
-                    title="Software Development Engineer Intern"
-                    company="Amazon "
-                    period="Feb 2020 - Feb 2021"
-                    location="Hyderabad, India"
-                    achievements={[
-                        'Reduced downstream model failures by 35% by designing and deploying custom validation pipelines that enforced schema constraints, anomaly detection, and automated data quality checks across 500K+ weekly records, ' +
-                        'preventing corrupt inputs from reaching training and inference systems.',
-                        'Cut annotation turnaround time by 25% and reduced rework by standardizing data schemas, introducing validation tooling,' +
-                        ' and eliminating ambiguous formats, enabling 10+ engineers to produce consistent, machine-ready datasets on the first pass.',
-                        'Reduced false positives by 18% by conducting root-cause analysis on model failures, surfacing recurring edge cases,' +
-                        ' and hardening labeling guidelines and preprocessing pipelines to eliminate systematic misclassifications.',
-                        'Increased annotation throughput by 40% while maintaining 99% consistency by automating quality checks, enforcing rule-based validations, and ' +
-                        'streamlining workflow steps to eliminate manual review bottlenecks in high-volume data pipelines.'
-                    ]}
-                    delay={0.3}
-                />
-            </div>
-        </Section>
-    );
+  const { getSection, updateField, editMode, loading } = useEdit();
+  const data = getSection('experience');
+
+  if (loading || !data) return <Section label="CAREER" title="Professional Experience" id="experience" />;
+
+  const addJob = () => {
+    updateField('experience', {
+      ...data,
+      items: [...data.items, {
+        title: 'Job Title',
+        company: 'Company Name',
+        period: 'Start – End',
+        location: 'Location',
+        achievements: ['Describe your achievement here.'],
+      }],
+    });
+  };
+
+  const removeJob = (idx) => {
+    updateField('experience', { ...data, items: data.items.filter((_, i) => i !== idx) });
+  };
+
+  return (
+    <Section label="CAREER" title="Professional Experience" id="experience">
+      <div className="timeline">
+        {data.items.map((item, i) => (
+          <TimelineItem key={i} item={item} itemIdx={i} onRemove={() => removeJob(i)} />
+        ))}
+        {editMode && (
+          <div className="edit-add-section-row">
+            <button className="edit-add-btn edit-add-section-btn" onClick={addJob}>
+              <Plus size={14} /> Add Job
+            </button>
+          </div>
+        )}
+      </div>
+    </Section>
+  );
 };
 
 export default Experience;

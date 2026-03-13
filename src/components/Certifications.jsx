@@ -1,43 +1,77 @@
-// ==================================================
-// File: src/components/Certifications.jsx
-// ==================================================
-import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { Award, Cloud, Terminal, FileCode } from 'lucide-react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Award, Cloud, Terminal, FileCode, Plus, X } from 'lucide-react';
 import Section from './Section';
+import EditableText from './EditableText';
+import { useEdit } from '../context/EditContext';
 
-const CertBadge = ({ icon, text, delay }) => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-50px" });
+const ICON_MAP = { Award, Cloud, Terminal, FileCode };
 
-    return (
-        <motion.div
-            ref={ref}
-            className="cert-badge"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.4, delay }}
-        >
-            <div className="cert-icon">{icon}</div>
-            <div className="cert-text">{text}</div>
-        </motion.div>
-    );
+const CertBadge = ({ item, itemIdx, delay, onRemove }) => {
+  const { getSection, updateField, editMode } = useEdit();
+  const IconComp = ICON_MAP[item.icon] || Award;
+
+  const onChangeText = (val) => {
+    const data = getSection('certifications');
+    updateField('certifications', {
+      ...data,
+      items: data.items.map((it, i) => i === itemIdx ? { ...it, text: val } : it),
+    });
+  };
+
+  return (
+    <motion.div className="cert-badge"
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, amount: 0.05 }}
+      transition={{ duration: 0.4, delay }}
+    >
+      {editMode && (
+        <button className="edit-remove-inline-btn edit-remove-cert" onClick={onRemove} title="Remove">
+          <X size={12} />
+        </button>
+      )}
+      <div className="cert-icon"><IconComp /></div>
+      <div className="cert-text">
+        <EditableText value={item.text} onChange={onChangeText} multiline />
+      </div>
+    </motion.div>
+  );
 };
 
 const Certifications = () => {
-    return (
-        <Section label="CREDENTIALS" title="Certifications & Publications">
-            <div className="certifications-grid">
-                <CertBadge icon={<Award />} text="RANLP 2025 Publication - Reinforcement Learning Systems" delay={0.1} />
-                <CertBadge icon={<Cloud />} text="AWS Certified Solutions Architect – Associate" delay={0.2} />
-                <CertBadge icon={<Cloud />} text="AWS Certified Developer – Associate" delay={0.3} />
-                <CertBadge icon={<Cloud />} text="Architecting with Google Compute Engine" delay={0.4} />
-                <CertBadge icon={<Terminal />} text="ServiceNow Certified System Administrator (CSA)" delay={0.5} />
-                <CertBadge icon={<FileCode />} text="ServiceNow Certified Application Developer (CAD)" delay={0.6} />
-            </div>
-        </Section>
-    );
+  const { getSection, updateField, editMode, loading } = useEdit();
+  const data = getSection('certifications');
+
+  if (loading || !data) return <Section label="CREDENTIALS" title="Certifications & Publications" />;
+
+  const addCert = () => {
+    updateField('certifications', {
+      ...data,
+      items: [...data.items, { icon: 'Award', text: 'New Certification or Publication' }],
+    });
+  };
+
+  const removeCert = (idx) => {
+    updateField('certifications', { ...data, items: data.items.filter((_, i) => i !== idx) });
+  };
+
+  return (
+    <Section label="CREDENTIALS" title="Certifications & Publications">
+      <div className="certifications-grid">
+        {data.items.map((item, i) => (
+          <CertBadge key={i} item={item} itemIdx={i} delay={i * 0.1} onRemove={() => removeCert(i)} />
+        ))}
+      </div>
+      {editMode && (
+        <div className="edit-add-section-row">
+          <button className="edit-add-btn edit-add-section-btn" onClick={addCert}>
+            <Plus size={14} /> Add Certification
+          </button>
+        </div>
+      )}
+    </Section>
+  );
 };
 
 export default Certifications;
-
