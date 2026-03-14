@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { Code2, Network, Database, Cloud, Brain, Cpu, Plus, X, Check } from 'lucide-react';
+import { motion, useMotionValue, useSpring, Reorder, useDragControls } from 'framer-motion';
+import { Code2, Network, Database, Cloud, Brain, Cpu, GripVertical, Plus, X, Check } from 'lucide-react';
 import Section from './Section';
 import { useEdit } from '../context/EditContext';
 
@@ -22,21 +22,44 @@ const ICON_SLUG = {
 
 const ICON_MAP = { Code2, Network, Database, Cloud, Brain, Cpu };
 
-const SkillTag = ({ skill, index, onRemove, editMode }) => {
+const SkillTag = ({ skill }) => {
   const slug = ICON_SLUG[skill] || skill.toLowerCase().replace(/[^a-z0-9]/g, '');
   const [imgError, setImgError] = useState(false);
   return (
-    <span className={`skill-tag${editMode ? ' skill-tag-editable' : ''}`}>
+    <span className="skill-tag">
       {slug && !imgError && (
         <img src={`https://cdn.simpleicons.org/${slug}`} alt="" className="skill-tag-icon" onError={() => setImgError(true)} />
       )}
       {skill}
-      {editMode && (
-        <button className="skill-tag-remove-btn" onClick={(e) => { e.stopPropagation(); onRemove(); }} title="Remove skill">
-          <X size={10} />
-        </button>
-      )}
     </span>
+  );
+};
+
+const DraggableSkillItem = ({ skill, onRemove }) => {
+  const controls = useDragControls();
+  const slug = ICON_SLUG[skill] || skill.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const [imgError, setImgError] = useState(false);
+  return (
+    <Reorder.Item
+      value={skill}
+      dragListener={false}
+      dragControls={controls}
+      className="skill-drag-row"
+    >
+      <GripVertical
+        size={15}
+        className="drag-handle"
+        onPointerDown={(e) => { e.preventDefault(); controls.start(e); }}
+        style={{ touchAction: 'none' }}
+      />
+      {slug && !imgError && (
+        <img src={`https://cdn.simpleicons.org/${slug}`} alt="" className="skill-tag-icon" onError={() => setImgError(true)} />
+      )}
+      <span className="skill-drag-name">{skill}</span>
+      <button className="edit-remove-inline-btn" style={{ opacity: 1 }} onClick={onRemove} title="Remove skill">
+        <X size={12} />
+      </button>
+    </Reorder.Item>
   );
 };
 
@@ -60,12 +83,20 @@ const SkillCard = ({ cat, catIdx }) => {
     glowOpacity.set(1);
   };
 
-  const removeSkill = (skillIdx) => {
+  const reorderSkills = (newSkills) => {
+    const data = getSection('skills');
+    updateField('skills', {
+      ...data,
+      categories: data.categories.map((c, i) => i === catIdx ? { ...c, skills: newSkills } : c),
+    });
+  };
+
+  const removeSkill = (skill) => {
     const data = getSection('skills');
     updateField('skills', {
       ...data,
       categories: data.categories.map((c, i) => i === catIdx
-        ? { ...c, skills: c.skills.filter((_, si) => si !== skillIdx) }
+        ? { ...c, skills: c.skills.filter(s => s !== skill) }
         : c),
     });
   };
@@ -103,39 +134,54 @@ const SkillCard = ({ cat, catIdx }) => {
       />
       <div className="skill-icon-wrap"><IconComponent size={28} /></div>
       <h3 className="skill-title">{cat.title}</h3>
-      <div className="skill-items">
-        {cat.skills.map((skill, idx) => (
-          <SkillTag key={skill + idx} skill={skill} index={idx} editMode={editMode} onRemove={() => removeSkill(idx)} />
-        ))}
 
-        {editMode && !adding && (
-          <button className="skill-tag-add-btn" onClick={() => setAdding(true)}>
-            <Plus size={11} /> Add skill
-          </button>
-        )}
+      {editMode ? (
+        <div className="skill-edit-list">
+          <Reorder.Group
+            axis="y"
+            values={cat.skills}
+            onReorder={reorderSkills}
+            style={{ listStyle: 'none', padding: 0, margin: 0 }}
+          >
+            {cat.skills.map((skill) => (
+              <DraggableSkillItem
+                key={skill}
+                skill={skill}
+                onRemove={() => removeSkill(skill)}
+              />
+            ))}
+          </Reorder.Group>
 
-        {editMode && adding && (
-          <span className="skill-tag-input-wrap">
-            <input
-              className="skill-tag-input"
-              autoFocus
-              value={newSkill}
-              onChange={(e) => setNewSkill(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') addSkill();
-                if (e.key === 'Escape') { setAdding(false); setNewSkill(''); }
-              }}
-              placeholder="e.g. Redis"
-            />
-            <button className="skill-confirm-btn" onClick={addSkill} title="Confirm">
-              <Check size={12} />
+          {!adding && (
+            <button className="skill-tag-add-btn" onClick={() => setAdding(true)}>
+              <Plus size={11} /> Add skill
             </button>
-            <button className="skill-cancel-btn" onClick={() => { setAdding(false); setNewSkill(''); }} title="Cancel">
-              <X size={12} />
-            </button>
-          </span>
-        )}
-      </div>
+          )}
+          {adding && (
+            <span className="skill-tag-input-wrap">
+              <input
+                className="skill-tag-input"
+                autoFocus
+                value={newSkill}
+                onChange={(e) => setNewSkill(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') addSkill();
+                  if (e.key === 'Escape') { setAdding(false); setNewSkill(''); }
+                }}
+                placeholder="e.g. Redis"
+              />
+              <button className="skill-confirm-btn" onClick={addSkill} title="Confirm"><Check size={12} /></button>
+              <button className="skill-cancel-btn" onClick={() => { setAdding(false); setNewSkill(''); }} title="Cancel"><X size={12} /></button>
+            </span>
+          )}
+        </div>
+      ) : (
+        <div className="skill-items">
+          {cat.skills.map((skill, idx) => (
+            <SkillTag key={skill + idx} skill={skill} />
+          ))}
+        </div>
+      )}
     </motion.div>
   );
 };

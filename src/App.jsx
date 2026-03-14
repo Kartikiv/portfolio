@@ -15,6 +15,7 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Background from './components/Background';
 import LoginPage from './components/LoginPage';
+import ResumePage from './components/ResumePage';
 import { trackEvent } from './lib/api';
 import { useEdit } from './context/EditContext';
 import './App.css';
@@ -91,6 +92,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Portfolio />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/resume" element={<ResumePage />} />
         </Routes>
       </EditProvider>
     </BrowserRouter>

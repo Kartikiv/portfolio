@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { ExternalLink, Mail, ChevronDown } from 'lucide-react';
+import { ExternalLink, Mail, ChevronDown, FileDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useEdit } from '../context/EditContext';
 import EditableText from './EditableText';
 import { trackEvent } from '../lib/api';
@@ -117,6 +118,7 @@ function TechMarqueeItem({ tech }) {
 
 const Hero = () => {
   const { editMode, getSection, updateField, loading, isLoggedIn } = useEdit();
+  const navigate = useNavigate();
   const data = getSection('hero');
   const typewritten = useTypewriter(TYPEWRITER_PHRASES);
 
@@ -148,6 +150,7 @@ const Hero = () => {
           <MagneticButton href="#projects" className="btn btn-primary" onClick={() => !isLoggedIn && trackEvent('cta_click', 'view_projects')}>View My Projects <ExternalLink size={18} /></MagneticButton>
           <MagneticButton href="#experience" className="btn btn-primary" onClick={() => !isLoggedIn && trackEvent('cta_click', 'view_experience')}>View My Experience <ExternalLink size={18} /></MagneticButton>
           <MagneticButton href="#contact" className="btn btn-secondary" onClick={() => !isLoggedIn && trackEvent('cta_click', 'get_in_touch')}>Get In Touch <Mail size={18} /></MagneticButton>
+          <MagneticButton href="#" className="btn btn-secondary" onClick={(e) => { e.preventDefault(); navigate('/resume'); }}>Export Resume <FileDown size={18} /></MagneticButton>
         </motion.div>
         <motion.div className="hero-stats" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.1 }}>
           {[

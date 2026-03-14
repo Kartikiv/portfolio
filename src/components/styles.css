@@ -1466,6 +1466,44 @@
   border-color: rgba(239, 68, 68, 0.6);
 }
 
+/* Drag handle for bullet points and skill rows */
+.drag-handle {
+  flex-shrink: 0;
+  cursor: grab;
+  opacity: 0;
+  color: var(--color-text-muted, #888);
+  transition: opacity 0.15s;
+  margin-right: 4px;
+}
+.drag-handle:active { cursor: grabbing; }
+.timeline-achievement-row:hover .drag-handle,
+.skill-drag-row:hover .drag-handle { opacity: 0.6; }
+
+/* Skill edit list (vertical drag list in edit mode) */
+.skill-edit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+.skill-drag-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(139, 92, 246, 0.06);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  cursor: default;
+  list-style: none;
+  user-select: none;
+}
+.skill-drag-name {
+  flex: 1;
+  font-size: 0.85rem;
+  color: var(--color-text, #e2e8f0);
+}
+
 /* Inline remove button (bullet points) */
 .edit-remove-inline-btn {
   flex-shrink: 0;
@@ -1485,6 +1523,7 @@
   vertical-align: middle;
 }
 .timeline-achievement-row:hover .edit-remove-inline-btn,
+.timeline-achievement-row:hover .reorder-btns,
 .edit-remove-cert { opacity: 1 !important; }
 .edit-remove-inline-btn:hover {
   background: rgba(239, 68, 68, 0.25);

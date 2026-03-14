@@ -1,45 +1,91 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Plus, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, Reorder, useDragControls } from 'framer-motion';
+import { GripVertical, Plus, X } from 'lucide-react';
 import Section from './Section';
 import EditableText from './EditableText';
 import { useEdit } from '../context/EditContext';
 
+let _uid = 0;
+const uid = () => ++_uid;
+
+const DraggableAchievement = ({ achObj, onEdit, onRemove }) => {
+  const controls = useDragControls();
+  return (
+    <Reorder.Item
+      as="li"
+      value={achObj}
+      dragListener={false}
+      dragControls={controls}
+      className="timeline-achievement-row"
+    >
+      <GripVertical
+        size={15}
+        className="drag-handle"
+        onPointerDown={(e) => { e.preventDefault(); controls.start(e); }}
+        style={{ touchAction: 'none' }}
+      />
+      <EditableText value={achObj.text} onChange={onEdit} multiline />
+      <button className="edit-remove-inline-btn" onClick={onRemove} title="Remove bullet">
+        <X size={12} />
+      </button>
+    </Reorder.Item>
+  );
+};
+
 const EduItem = ({ item, itemIdx, onRemove }) => {
   const { getSection, updateField, editMode } = useEdit();
+  const [reorderItems, setReorderItems] = useState(() =>
+    item.achievements.map(text => ({ id: uid(), text }))
+  );
+
+  useEffect(() => {
+    if (editMode) {
+      setReorderItems(item.achievements.map(text => ({ id: uid(), text })));
+    }
+  }, [editMode]);
 
   const onChangeField = (field, val) => {
     const data = getSection('education');
     updateField('education', { ...data, items: data.items.map((it, i) => i === itemIdx ? { ...it, [field]: val } : it) });
   };
 
-  const onChangeAchievement = (achIdx, val) => {
+  const onChangeAchievement = (id, val) => {
+    const newItems = reorderItems.map(o => o.id === id ? { ...o, text: val } : o);
+    setReorderItems(newItems);
     const data = getSection('education');
     updateField('education', {
       ...data,
-      items: data.items.map((it, i) => i === itemIdx
-        ? { ...it, achievements: it.achievements.map((a, ai) => ai === achIdx ? val : a) }
-        : it),
+      items: data.items.map((it, i) => i === itemIdx ? { ...it, achievements: newItems.map(o => o.text) } : it),
+    });
+  };
+
+  const reorderAchievements = (newOrder) => {
+    setReorderItems(newOrder);
+    const data = getSection('education');
+    updateField('education', {
+      ...data,
+      items: data.items.map((it, i) => i === itemIdx ? { ...it, achievements: newOrder.map(o => o.text) } : it),
     });
   };
 
   const addAchievement = () => {
+    const newObj = { id: uid(), text: 'Add detail here.' };
+    const newItems = [...reorderItems, newObj];
+    setReorderItems(newItems);
     const data = getSection('education');
     updateField('education', {
       ...data,
-      items: data.items.map((it, i) => i === itemIdx
-        ? { ...it, achievements: [...it.achievements, 'Add detail here.'] }
-        : it),
+      items: data.items.map((it, i) => i === itemIdx ? { ...it, achievements: newItems.map(o => o.text) } : it),
     });
   };
 
-  const removeAchievement = (achIdx) => {
+  const removeAchievement = (id) => {
+    const newItems = reorderItems.filter(o => o.id !== id);
+    setReorderItems(newItems);
     const data = getSection('education');
     updateField('education', {
       ...data,
-      items: data.items.map((it, i) => i === itemIdx
-        ? { ...it, achievements: it.achievements.filter((_, ai) => ai !== achIdx) }
-        : it),
+      items: data.items.map((it, i) => i === itemIdx ? { ...it, achievements: newItems.map(o => o.text) } : it),
     });
   };
 
@@ -75,25 +121,42 @@ const EduItem = ({ item, itemIdx, onRemove }) => {
             <EditableText value={item.location || ''} onChange={(v) => onChangeField('location', v)} />
           </div>
         )}
-        <ul className="timeline-achievements">
-          {item.achievements.map((ach, achIdx) => (
-            <li key={achIdx} className="timeline-achievement-row">
-              <EditableText value={ach} onChange={(v) => onChangeAchievement(achIdx, v)} multiline />
-              {editMode && (
-                <button className="edit-remove-inline-btn" onClick={() => removeAchievement(achIdx)} title="Remove">
-                  <X size={12} />
+        {editMode ? (
+          <>
+            <Reorder.Group
+              as="ul"
+              axis="y"
+              values={reorderItems}
+              onReorder={reorderAchievements}
+              className="timeline-achievements"
+              style={{ padding: 0, margin: 0 }}
+            >
+              {reorderItems.map((achObj) => (
+                <DraggableAchievement
+                  key={achObj.id}
+                  achObj={achObj}
+                  onEdit={(val) => onChangeAchievement(achObj.id, val)}
+                  onRemove={() => removeAchievement(achObj.id)}
+                />
+              ))}
+            </Reorder.Group>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              <li className="edit-add-row">
+                <button className="edit-add-btn" onClick={addAchievement}>
+                  <Plus size={13} /> Add bullet
                 </button>
-              )}
-            </li>
-          ))}
-          {editMode && (
-            <li className="edit-add-row">
-              <button className="edit-add-btn" onClick={addAchievement}>
-                <Plus size={13} /> Add bullet
-              </button>
-            </li>
-          )}
-        </ul>
+              </li>
+            </ul>
+          </>
+        ) : (
+          <ul className="timeline-achievements">
+            {item.achievements.map((ach, achIdx) => (
+              <li key={achIdx} className="timeline-achievement-row">
+                <EditableText value={ach} onChange={() => {}} multiline />
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </motion.div>
   );
