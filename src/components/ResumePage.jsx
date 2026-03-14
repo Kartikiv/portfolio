@@ -179,7 +179,7 @@ const ResumePage = () => {
                   </div>
                   {job.location && <div className="r-job-sub">{job.location}</div>}
                   <ul className="r-bullets">
-                    {(job.achievements || []).slice(0, 4).map((ach, ai) => (
+                    {(job.achievements || []).map((ach, ai) => (
                       <li key={ai}>{ach}</li>
                     ))}
                   </ul>
