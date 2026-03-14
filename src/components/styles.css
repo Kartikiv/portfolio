@@ -1585,6 +1585,58 @@
   font-size: 0.8rem;
 }
 
+/* ── Section reorder handle ─────────────────────────────────────────────────── */
+.section-reorder-handle {
+  position: absolute;
+  top: 12px;
+  right: 20px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: rgba(139,92,246,0.15);
+  border: 1px solid rgba(139,92,246,0.35);
+  border-radius: 20px;
+  cursor: grab;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  user-select: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+.section-reorder-handle:hover {
+  background: rgba(139,92,246,0.28);
+  border-color: rgba(139,92,246,0.6);
+  color: var(--color-accent);
+}
+.section-reorder-handle:active { cursor: grabbing; }
+
+/* ── Custom sections ───────────────────────────────────────────────────────── */
+.custom-section-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  padding: 10px 14px;
+  background: rgba(139,92,246,0.06);
+  border: 1px dashed rgba(139,92,246,0.3);
+  border-radius: 10px;
+}
+.custom-section-meta-label {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+.custom-section-meta-input {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+  min-width: 80px;
+}
+
 /* ── Skill tag edit controls ───────────────────────────────────────────────── */
 .skill-tag-editable {
   padding-right: 4px;

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, Reorder, useDragControls } from 'framer-motion';
+import { GripHorizontal } from 'lucide-react';
 import { EditProvider } from './context/EditContext';
 import AdminBar from './components/AdminBar';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
-import Achievements from './components/Achievements';
 import Skills from './components/Skills';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
@@ -17,11 +17,32 @@ import Background from './components/Background';
 import LoginPage from './components/LoginPage';
 import ResumePage from './components/ResumePage';
 import FormatToolbar from './components/FormatToolbar';
+import CustomSections from './components/CustomSections';
 import { trackEvent } from './lib/api';
 import { useEdit } from './context/EditContext';
 import './App.css';
 
 const TRACKED_SECTIONS = ['hero', 'skills', 'experience', 'projects', 'certifications', 'education', 'contact'];
+
+const DEFAULT_ORDER = ['skills', 'experience', 'projects', 'certifications', 'education', 'customSections'];
+
+const SECTION_COMPONENTS = {
+  skills: <Skills />,
+  experience: <Experience />,
+  projects: <Projects />,
+  certifications: <Certifications />,
+  education: <Education />,
+  customSections: <CustomSections />,
+};
+
+const SECTION_LABELS = {
+  skills: 'Skills',
+  experience: 'Experience',
+  projects: 'Projects',
+  certifications: 'Certifications',
+  education: 'Education',
+  customSections: 'Custom Sections',
+};
 
 function useAnalytics() {
   const { isLoggedIn } = useEdit();
@@ -54,9 +75,44 @@ function useAnalytics() {
   }, [isLoggedIn]);
 }
 
+/* Wraps one section slot with a drag handle in edit mode */
+const SectionSlot = ({ sectionKey }) => {
+  const { editMode } = useEdit();
+  const controls = useDragControls();
+
+  return (
+    <Reorder.Item
+      as="div"
+      value={sectionKey}
+      dragListener={false}
+      dragControls={controls}
+      style={{ position: 'relative' }}
+    >
+      {editMode && (
+        <div
+          className="section-reorder-handle"
+          onPointerDown={(e) => { e.preventDefault(); controls.start(e); }}
+          title={`Drag to reorder ${SECTION_LABELS[sectionKey]}`}
+        >
+          <GripHorizontal size={14} />
+          <span>{SECTION_LABELS[sectionKey]}</span>
+        </div>
+      )}
+      {SECTION_COMPONENTS[sectionKey]}
+    </Reorder.Item>
+  );
+};
+
 function Portfolio() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const { getSection, updateField, editMode } = useEdit();
   useAnalytics();
+
+  const sectionOrder = getSection('sectionOrder')?.order || DEFAULT_ORDER;
+
+  const handleReorder = (newOrder) => {
+    updateField('sectionOrder', { order: newOrder });
+  };
 
   useEffect(() => {
     const handleMouseMove = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
@@ -75,11 +131,25 @@ function Portfolio() {
       />
       <Navigation />
       <Hero />
-      <Skills />
-      <Experience />
-      <Projects />
-      <Certifications />
-      <Education />
+
+      {editMode ? (
+        <Reorder.Group
+          as="div"
+          axis="y"
+          values={sectionOrder}
+          onReorder={handleReorder}
+          style={{ listStyle: 'none', padding: 0, margin: 0 }}
+        >
+          {sectionOrder.map((key) => (
+            <SectionSlot key={key} sectionKey={key} />
+          ))}
+        </Reorder.Group>
+      ) : (
+        sectionOrder.map((key) => (
+          <div key={key}>{SECTION_COMPONENTS[key]}</div>
+        ))
+      )}
+
       <Contact />
       <Footer />
     </div>
