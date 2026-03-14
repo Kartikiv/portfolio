@@ -23,8 +23,8 @@ const CertBadge = ({ item, itemIdx, delay, onRemove }) => {
     <motion.div className="cert-badge"
       initial={{ opacity: 0, scale: 0.9 }}
       whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, amount: 0.05 }}
-      transition={{ duration: 0.4, delay }}
+      viewport={{ once: false, amount: 0 }}
+      transition={{ duration: 0.3, delay }}
     >
       {editMode && (
         <button className="edit-remove-inline-btn edit-remove-cert" onClick={onRemove} title="Remove">

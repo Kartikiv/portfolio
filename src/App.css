@@ -15,18 +15,22 @@
   filter: blur(60px);
 }
 
-/* Responsive */
+/* Cursor follower — hide on touch/mobile */
+@media (hover: none) and (pointer: coarse) {
+  .cursor-follower { display: none; }
+}
+
+/* Tablet */
 @media (max-width: 1024px) {
-  .hero, .section { padding: 4rem 4rem !important; }
   .projects-grid { grid-template-columns: 1fr !important; }
 }
 
+/* Mobile */
 @media (max-width: 768px) {
-  .hero, .section { padding: 3rem 2rem !important; }
-  .skills-grid, .projects-grid, .certifications-grid { 
-    grid-template-columns: 1fr !important; 
+  .skills-grid, .projects-grid, .certifications-grid {
+    grid-template-columns: 1fr !important;
   }
-  .timeline-item { padding-left: 3rem !important; }
+  .hero-cta { flex-direction: column !important; align-items: stretch !important; }
   .contact-links { flex-direction: column !important; align-items: center !important; }
-  .hero-cta { flex-direction: column !important; }
 }
+

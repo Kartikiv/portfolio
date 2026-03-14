@@ -28,13 +28,14 @@ export default function AdminBar() {
               <button
                 className={`admin-btn admin-btn-metrics${showMetrics ? ' active' : ''}`}
                 onClick={() => setShowMetrics((v) => !v)}
+                title="Analytics"
               >
-                <BarChart2 size={14} /> Analytics
+                <BarChart2 size={14} /> <span className="admin-btn-text">Analytics</span>
               </button>
 
               {!editMode ? (
-                <button className="admin-btn admin-btn-edit" onClick={() => setEditMode(true)}>
-                  <Edit3 size={14} /> Edit Content
+                <button className="admin-btn admin-btn-edit" onClick={() => setEditMode(true)} title="Edit Content">
+                  <Edit3 size={14} /> <span className="admin-btn-text">Edit Content</span>
                 </button>
               ) : (
                 <>
@@ -42,17 +43,18 @@ export default function AdminBar() {
                     className="admin-btn admin-btn-save"
                     onClick={saveAll}
                     disabled={saving}
+                    title={saving ? 'Saving…' : 'Save'}
                   >
                     <Save size={14} />
-                    {saving ? 'Saving…' : hasPendingChanges ? 'Save Changes *' : 'Save'}
+                    <span className="admin-btn-text">{saving ? 'Saving…' : hasPendingChanges ? 'Save *' : 'Save'}</span>
                   </button>
-                  <button className="admin-btn admin-btn-discard" onClick={discardChanges}>
-                    <X size={14} /> Discard
+                  <button className="admin-btn admin-btn-discard" onClick={discardChanges} title="Discard">
+                    <X size={14} /> <span className="admin-btn-text">Discard</span>
                   </button>
                 </>
               )}
-              <button className="admin-btn admin-btn-logout" onClick={logout}>
-                <LogOut size={14} /> Logout
+              <button className="admin-btn admin-btn-logout" onClick={logout} title="Logout">
+                <LogOut size={14} /> <span className="admin-btn-text">Logout</span>
               </button>
             </div>
           </motion.div>

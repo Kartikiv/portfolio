@@ -50,8 +50,8 @@ const ProjectCard = ({ item, itemIdx, onRemove }) => {
     <motion.div className="project-card"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.05 }}
-      transition={{ duration: 0.5, delay: itemIdx * 0.1 }}
+      viewport={{ once: false, amount: 0 }}
+      transition={{ duration: 0.4, delay: itemIdx * 0.05 }}
       whileHover={{ y: -8 }}
     >
       {editMode && (
@@ -74,19 +74,14 @@ const ProjectCard = ({ item, itemIdx, onRemove }) => {
         </p>
         <ul className="project-highlights">
           {item.highlights.map((h, hi) => (
-            <motion.li key={hi} className="timeline-achievement-row"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.4, delay: hi * 0.05 }}
-            >
+            <li key={hi} className="timeline-achievement-row">
               <EditableText value={h} onChange={(v) => onChangeHighlight(hi, v)} multiline />
               {editMode && (
                 <button className="edit-remove-inline-btn" onClick={() => removeHighlight(hi)} title="Remove bullet">
                   <X size={12} />
                 </button>
               )}
-            </motion.li>
+            </li>
           ))}
           {editMode && (
             <li className="edit-add-row">

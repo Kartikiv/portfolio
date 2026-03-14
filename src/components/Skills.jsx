@@ -88,8 +88,8 @@ const SkillCard = ({ cat, catIdx }) => {
     <motion.div ref={cardRef} className={`skill-card${editMode ? ' skill-card-editing' : ''}`}
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.05 }}
-      transition={{ duration: 0.5, delay: catIdx * 0.08, ease: 'easeOut' }}
+      viewport={{ once: false, amount: 0 }}
+      transition={{ duration: 0.4, delay: catIdx * 0.06, ease: 'easeOut' }}
       style={editMode ? {} : { rotateX: springX, rotateY: springY, transformPerspective: 800, transformStyle: 'preserve-3d' }}
       onMouseMove={!editMode ? handleMouseMove : undefined}
       onMouseLeave={!editMode ? () => { rotateX.set(0); rotateY.set(0); glowOpacity.set(0); } : undefined}
@@ -98,8 +98,8 @@ const SkillCard = ({ cat, catIdx }) => {
       <motion.div className="skill-card-accent-bar"
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
-        viewport={{ once: true, amount: 0.05 }}
-        transition={{ duration: 0.6, delay: catIdx * 0.08 + 0.2 }}
+        viewport={{ once: false, amount: 0 }}
+        transition={{ duration: 0.5, delay: catIdx * 0.06 + 0.15 }}
       />
       <div className="skill-icon-wrap"><IconComponent size={28} /></div>
       <h3 className="skill-title">{cat.title}</h3>

@@ -47,8 +47,8 @@ const TimelineItem = ({ item, itemIdx, onRemove }) => {
     <motion.div className="timeline-item"
       initial={{ opacity: 0, x: -30 }}
       whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, amount: 0.05 }}
-      transition={{ duration: 0.6, delay: itemIdx * 0.1 }}
+      viewport={{ once: false, amount: 0 }}
+      transition={{ duration: 0.4, delay: itemIdx * 0.05 }}
     >
       {editMode && (
         <button className="edit-remove-item-btn" onClick={onRemove} title="Remove job">
@@ -77,19 +77,14 @@ const TimelineItem = ({ item, itemIdx, onRemove }) => {
         )}
         <ul className="timeline-achievements">
           {item.achievements.map((ach, achIdx) => (
-            <motion.li key={achIdx} className="timeline-achievement-row"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.4, delay: achIdx * 0.05 }}
-            >
+            <li key={achIdx} className="timeline-achievement-row">
               <EditableText value={ach} onChange={(v) => onChangeAchievement(achIdx, v)} multiline />
               {editMode && (
                 <button className="edit-remove-inline-btn" onClick={() => removeAchievement(achIdx)} title="Remove bullet">
                   <X size={12} />
                 </button>
               )}
-            </motion.li>
+            </li>
           ))}
           {editMode && (
             <li className="edit-add-row">

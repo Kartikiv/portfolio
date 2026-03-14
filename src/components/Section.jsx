@@ -11,7 +11,7 @@ const Section = ({ label, title, children, id }) => {
             id={id}
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true, amount: 0.05 }}
+            viewport={{ once: false, amount: 0 }}
             transition={{ duration: 0.6 }}
         >
             <div className="section-header">
@@ -19,7 +19,7 @@ const Section = ({ label, title, children, id }) => {
                     className="section-label"
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.05 }}
+                    viewport={{ once: false, amount: 0 }}
                     transition={{ duration: 0.5 }}
                 >
                     {label}
@@ -28,7 +28,7 @@ const Section = ({ label, title, children, id }) => {
                     className="section-title"
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.05 }}
+                    viewport={{ once: false, amount: 0 }}
                     transition={{ duration: 0.5, delay: 0.1 }}
                 >
                     {title}
@@ -37,7 +37,7 @@ const Section = ({ label, title, children, id }) => {
                     className="section-divider"
                     initial={{ width: 0 }}
                     whileInView={{ width: 80 }}
-                    viewport={{ once: true, amount: 0.05 }}
+                    viewport={{ once: false, amount: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                 />
             </div>

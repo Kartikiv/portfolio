@@ -7,7 +7,7 @@ import Section from './Section';
 
 const StatCard = ({ number, label, delay }) => {
     const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-50px" });
+    const isInView = useInView(ref, { once: false, margin: "0px" });
 
     return (
         <motion.div
