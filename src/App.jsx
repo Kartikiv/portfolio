@@ -16,6 +16,7 @@ import Footer from './components/Footer';
 import Background from './components/Background';
 import LoginPage from './components/LoginPage';
 import ResumePage from './components/ResumePage';
+import FormatToolbar from './components/FormatToolbar';
 import { trackEvent } from './lib/api';
 import { useEdit } from './context/EditContext';
 import './App.css';
@@ -89,6 +90,7 @@ function App() {
   return (
     <BrowserRouter>
       <EditProvider>
+        <FormatToolbar />
         <Routes>
           <Route path="/" element={<Portfolio />} />
           <Route path="/login" element={<LoginPage />} />

@@ -26,7 +26,7 @@ const DraggableHighlight = ({ hObj, onEdit, onRemove }) => {
         onPointerDown={(e) => { e.preventDefault(); controls.start(e); }}
         style={{ touchAction: 'none' }}
       />
-      <EditableText value={hObj.text} onChange={onEdit} multiline />
+      <EditableText value={hObj.text} onChange={onEdit} multiline richText />
       <button className="edit-remove-inline-btn" onClick={onRemove} title="Remove bullet">
         <X size={12} />
       </button>
@@ -140,7 +140,7 @@ const ProjectCard = ({ item, itemIdx, onRemove }) => {
           ) : (
             (item.highlights || []).map((h, hi) => (
               <li key={hi} className="timeline-achievement-row">
-                <EditableText value={h} onChange={() => {}} multiline />
+                <EditableText value={h} onChange={() => {}} multiline richText />
               </li>
             ))
           )}

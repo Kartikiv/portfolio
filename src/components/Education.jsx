@@ -24,7 +24,7 @@ const DraggableAchievement = ({ achObj, onEdit, onRemove }) => {
         onPointerDown={(e) => { e.preventDefault(); controls.start(e); }}
         style={{ touchAction: 'none' }}
       />
-      <EditableText value={achObj.text} onChange={onEdit} multiline />
+      <EditableText value={achObj.text} onChange={onEdit} multiline richText />
       <button className="edit-remove-inline-btn" onClick={onRemove} title="Remove bullet">
         <X size={12} />
       </button>
@@ -152,7 +152,7 @@ const EduItem = ({ item, itemIdx, onRemove }) => {
           <ul className="timeline-achievements">
             {item.achievements.map((ach, achIdx) => (
               <li key={achIdx} className="timeline-achievement-row">
-                <EditableText value={ach} onChange={() => {}} multiline />
+                <EditableText value={ach} onChange={() => {}} multiline richText />
               </li>
             ))}
           </ul>

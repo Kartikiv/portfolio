@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Download } from 'lucide-react';
 import { useEdit } from '../context/EditContext';
@@ -13,11 +13,26 @@ const ResumePage = () => {
   const skills   = getSection('skills')?.categories || [];
   const certs    = getSection('certifications')?.items || [];
   const contact  = getSection('contact') || {};
+  const resumeRef = useRef(null);
 
   useEffect(() => {
     document.title = `${hero.title || 'Resume'} — Resume`;
     return () => { document.title = 'Sai Kartik Ivaturi - Software Engineer'; };
   }, [hero.title]);
+
+  // Auto-scale to always fill exactly one letter page
+  useEffect(() => {
+    const el = resumeRef.current;
+    if (!el) return;
+    el.style.transform = '';
+    el.style.transformOrigin = '';
+    const maxH = 864;
+    const h = el.scrollHeight;
+    const scale = maxH / h;
+    el.style.transform = `scale(${scale})`;
+    el.style.transformOrigin = 'top center';
+    el.parentElement.style.height = maxH + 'px';
+  });
 
   if (loading) {
     return (
@@ -58,7 +73,7 @@ const ResumePage = () => {
         }
 
         .resume {
-          padding: 0.55in 0.6in;
+          padding: 0.3in;
           font-family: 'Times New Roman', Times, serif;
           font-size: 9.5pt;
           color: #111;
@@ -66,9 +81,9 @@ const ResumePage = () => {
         }
 
         /* ── Header ── */
-        .r-name { font-size: 21pt; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 2px; }
-        .r-label { font-size: 10.5pt; color: #444; margin-bottom: 5px; }
-        .r-contact { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 8.5pt; color: #555; }
+        .r-name { font-size: 21pt; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 2px; text-align: center; }
+        .r-label { font-size: 10.5pt; color: #444; margin-bottom: 5px; text-align: center; }
+        .r-contact { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 8.5pt; color: #555; justify-content: center; }
         .r-contact a { color: #1a56db; text-decoration: underline; }
         a { color: #1a56db; text-decoration: underline; }
 
@@ -76,61 +91,53 @@ const ResumePage = () => {
         .r-divider { border: none; border-top: 1.2px solid #222; margin: 7px 0; }
 
         /* ── Section ── */
-        .r-section { margin-top: 9px; }
+        .r-section { margin-top: 7px; }
         .r-section-title {
           font-size: 8.5pt; font-weight: 700; letter-spacing: 1.5px;
           text-transform: uppercase; border-bottom: 0.8px solid #555;
-          padding-bottom: 2px; margin-bottom: 6px; color: #222;
+          padding-bottom: 1px; margin-bottom: 4px; color: #222;
         }
 
         /* ── Summary ── */
-        .r-summary { font-size: 8.5pt; line-height: 1.45; color: #333; }
+        .r-summary { font-size: 8.5pt; line-height: 1.4; color: #333; margin-top: 5px; }
 
         /* ── Experience ── */
-        .r-job { margin-bottom: 8px; }
+        .r-job { margin-bottom: 6px; }
         .r-job-header { display: flex; justify-content: space-between; align-items: baseline; }
-        .r-job-title { font-size: 9.5pt; font-weight: 700; }
+        .r-job-title { font-size: 9pt; font-weight: 700; }
         .r-job-period { font-size: 8pt; color: #555; white-space: nowrap; }
-        .r-job-sub { font-size: 8.5pt; color: #444; margin-bottom: 3px; }
+        .r-job-sub { font-size: 8pt; color: #444; margin-bottom: 2px; }
         .r-bullets { list-style: none; padding: 0; margin: 0; }
         .r-bullets li {
           display: flex; gap: 5px;
-          font-size: 8.5pt; line-height: 1.4; margin-bottom: 2px; color: #222;
+          font-size: 8pt; line-height: 1.35; margin-bottom: 1.5px; color: #222;
         }
         .r-bullets li::before { content: "•"; flex-shrink: 0; }
 
         /* ── Skills ── */
         .r-skills-list { list-style: disc; padding-left: 14px; margin: 0; }
-        .r-skill-row { font-size: 8.5pt; line-height: 1.4; margin-bottom: 2px; color: #222; }
+        .r-skill-row { font-size: 8pt; line-height: 1.35; margin-bottom: 1.5px; color: #222; }
         .r-skill-cat { font-weight: 700; color: #222; }
         .r-skill-list { color: #333; }
 
         /* ── Education ── */
         .r-edu-list { list-style: disc; padding-left: 14px; margin: 0; }
-        .r-edu { margin-bottom: 6px; }
+        .r-edu { margin-bottom: 4px; }
         .r-edu-header { display: flex; justify-content: space-between; align-items: baseline; }
-        .r-edu-degree { font-size: 9.5pt; font-weight: 700; }
-        .r-edu-inst { font-size: 8.5pt; color: #444; }
+        .r-edu-degree { font-size: 9pt; font-weight: 700; }
+        .r-edu-inst { font-size: 8pt; color: #444; }
 
         /* ── Certifications ── */
         .r-certs { list-style: disc; padding-left: 14px; margin: 0; }
-        .r-cert { font-size: 8.5pt; color: #333; line-height: 1.5; }
+        .r-cert { font-size: 8pt; color: #333; line-height: 1.35; }
 
         /* ────────── PRINT ────────── */
         @media print {
           body { background: #fff; }
           .resume-toolbar { display: none; }
-          .resume-wrap {
-            margin: 0; max-width: none;
-            box-shadow: none;
-          }
-          .resume {
-            padding: 0;
-          }
-          @page {
-            size: letter;
-            margin: 0.5in 0.55in;
-          }
+          .resume-wrap { margin: 0; max-width: none; box-shadow: none; overflow: visible; }
+          .resume { padding: 0; transform-origin: top center !important; }
+          @page { size: letter; margin: 0.5in 0.55in; }
         }
       `}</style>
 
@@ -146,11 +153,10 @@ const ResumePage = () => {
       </div>
 
       <div className="resume-wrap">
-        <div className="resume">
+        <div className="resume" ref={resumeRef}>
 
           {/* Header */}
           <div className="r-name">{hero.title}</div>
-          {hero.label && <div className="r-label">{hero.label}</div>}
           <div className="r-contact">
             {contact.email    && <span>{contact.email}</span>}
             {contact.linkedin && <a href={contact.linkedin} target="_blank" rel="noreferrer">{contact.linkedin.replace('https://', '')}</a>}
@@ -159,12 +165,9 @@ const ResumePage = () => {
 
           <hr className="r-divider" />
 
-          {/* Summary */}
+          {/* Summary — no title */}
           {hero.description && (
-            <div className="r-section">
-              <div className="r-section-title">Summary</div>
-              <p className="r-summary">{hero.description}</p>
-            </div>
+            <p className="r-summary">{hero.description}</p>
           )}
 
           {/* Experience */}
@@ -180,7 +183,7 @@ const ResumePage = () => {
                   {job.location && <div className="r-job-sub">{job.location}</div>}
                   <ul className="r-bullets">
                     {(job.achievements || []).map((ach, ai) => (
-                      <li key={ai}>{ach}</li>
+                      <li key={ai} dangerouslySetInnerHTML={{ __html: ach }} />
                     ))}
                   </ul>
                 </div>
@@ -217,7 +220,7 @@ const ResumePage = () => {
                     {(e.achievements || []).length > 0 && (
                       <ul className="r-bullets" style={{ marginTop: '2px' }}>
                         {e.achievements.map((ach, ai) => (
-                          <li key={ai}>{ach}</li>
+                          <li key={ai} dangerouslySetInnerHTML={{ __html: ach }} />
                         ))}
                       </ul>
                     )}

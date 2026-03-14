@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, Reorder, useDragControls } from 'framer-motion';
 import { Code2, Network, Database, Cloud, Brain, Cpu, GripVertical, Plus, X, Check } from 'lucide-react';
 import Section from './Section';
@@ -39,16 +39,6 @@ const DraggableSkillItem = ({ skill, onRemove }) => {
   const controls = useDragControls();
   const slug = ICON_SLUG[skill] || skill.toLowerCase().replace(/[^a-z0-9]/g, '');
   const [imgError, setImgError] = useState(false);
-  const removeBtnRef = useRef(null);
-  const onRemoveRef = useRef(onRemove);
-  useEffect(() => { onRemoveRef.current = onRemove; }, [onRemove]);
-  useEffect(() => {
-    const btn = removeBtnRef.current;
-    if (!btn) return;
-    const handler = (e) => { e.stopImmediatePropagation(); e.preventDefault(); onRemoveRef.current(); };
-    btn.addEventListener('pointerdown', handler, { capture: true });
-    return () => btn.removeEventListener('pointerdown', handler, { capture: true });
-  }, []);
   return (
     <Reorder.Item
       value={skill}
@@ -67,9 +57,9 @@ const DraggableSkillItem = ({ skill, onRemove }) => {
       )}
       <span className="skill-drag-name">{skill}</span>
       <button
-        ref={removeBtnRef}
         className="edit-remove-inline-btn"
         style={{ opacity: 1 }}
+        onClick={onRemove}
         title="Remove skill"
       >
         <X size={12} />
