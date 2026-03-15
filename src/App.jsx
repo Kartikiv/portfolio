@@ -12,10 +12,10 @@ import Projects from './components/Projects';
 import Certifications from './components/Certifications';
 import Education from './components/Education';
 import Contact from './components/Contact';
-import Footer from './components/Footer';
 import Background from './components/Background';
 import LoginPage from './components/LoginPage';
 import ResumePage from './components/ResumePage';
+import AnalyticsPage from './components/AnalyticsPage';
 import FormatToolbar from './components/FormatToolbar';
 import CustomSections from './components/CustomSections';
 import { trackEvent } from './lib/api';
@@ -151,7 +151,6 @@ function Portfolio() {
       )}
 
       <Contact />
-      <Footer />
     </div>
   );
 }
@@ -165,6 +164,7 @@ function App() {
           <Route path="/" element={<Portfolio />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/resume" element={<ResumePage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
         </Routes>
       </EditProvider>
     </BrowserRouter>

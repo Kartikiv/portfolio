@@ -147,7 +147,9 @@ const sections = {
   },
 
   contact: {
+    phone: '+1 (213) 246-8105',
     email: 'saikartik.iv@gmail.com',
+    location: 'San Jose, CA',
     linkedin: 'https://linkedin.com/in/sai-kartik-ivaturi-958809183/',
     github: 'https://github.com/kartikiv',
     text: "I'm currently seeking software engineering opportunities where I can contribute to building scalable, high-performance systems. Whether you have a project in mind, want to discuss technology, or just want to connect, I'd love to hear from you.",

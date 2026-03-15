@@ -101,9 +101,10 @@ const ResumePage = () => {
         /* Header */
         .r-name { font-size: 20pt; font-weight: 700; margin-bottom: 3px; text-align: center; }
         .r-contact {
-          display: flex; flex-wrap: wrap; gap: 3px 16px;
+          display: flex; flex-wrap: wrap; gap: 3px 0;
           font-size: 8.5pt; color: #555; justify-content: center; margin-bottom: 2px;
         }
+        .r-contact > * + *::before { content: " | "; white-space: pre; color: #555; }
         .r-contact a, a { color: #1a56db; text-decoration: underline; }
 
         /* Divider */
@@ -173,9 +174,11 @@ const ResumePage = () => {
           {/* Header */}
           <div className="r-name">{hero.title}</div>
           <div className="r-contact">
-            {contact.email    && <span>{contact.email}</span>}
-            {contact.linkedin && <a href={contact.linkedin} target="_blank" rel="noreferrer">{contact.linkedin.replace('https://', '')}</a>}
-            {contact.github   && <a href={contact.github}   target="_blank" rel="noreferrer">{contact.github.replace('https://', '')}</a>}
+            {contact.phone    && <span>{contact.phone}</span>}
+            {contact.email    && <a href={`mailto:${contact.email}`}>{contact.email}</a>}
+            {contact.location && <span>{contact.location}</span>}
+            {contact.linkedin && <a href={contact.linkedin} target="_blank" rel="noreferrer">{contact.linkedin.replace(/https?:\/\/(www\.)?/, '')}</a>}
+            {contact.github   && <a href={contact.github}   target="_blank" rel="noreferrer">{contact.github.replace(/https?:\/\/(www\.)?/, '')}</a>}
           </div>
           <hr className="r-divider" />
 

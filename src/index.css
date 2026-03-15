@@ -19,6 +19,13 @@
   --color-highlight: #8b5cf6;
   --font-mono: 'IBM Plex Mono', monospace;
   --font-serif: 'Spectral', serif;
+  /* Surface tokens used by components */
+  --color-surface: #ffffff;
+  --color-surface-raised: #f8f7ff;
+  --color-nav-bg: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 100%);
+  --color-mobile-menu-bg: rgba(255,255,255,0.98);
+  --color-input-bg: #ffffff;
+  --color-tag-bg: rgba(99,102,241,0.08);
 }
 
 body {
@@ -79,4 +86,32 @@ body {
 ::selection {
   background: rgba(99, 102, 241, 0.3);
   color: var(--color-text);
+}
+
+/* ─── Dark Mode ─────────────────────────────────────────────────────────────
+   Must come AFTER base body rule so it wins the cascade.
+   ────────────────────────────────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #0f0f13;
+    --color-secondary: #1a1a24;
+    --color-tertiary: #252535;
+    --color-accent: #818cf8;
+    --color-accent-warm: #fbbf24;
+    --color-accent-pink: #f472b6;
+    --color-accent-cyan: #22d3ee;
+    --color-text: #f1f5f9;
+    --color-text-muted: #cbd5e1;
+    --color-highlight: #a78bfa;
+    --color-surface: #1a1a24;
+    --color-surface-raised: #252535;
+    --color-nav-bg: linear-gradient(180deg, rgba(15,15,19,0.97) 0%, rgba(15,15,19,0.85) 100%);
+    --color-mobile-menu-bg: rgba(15,15,19,0.99);
+    --color-input-bg: #252535;
+    --color-tag-bg: rgba(129,140,248,0.12);
+  }
+  body {
+    background: #0f0f13;
+    color: var(--color-text);
+  }
 }

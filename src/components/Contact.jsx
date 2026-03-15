@@ -23,6 +23,16 @@ const Contact = () => {
             <Mail className="contact-icon" />
             <EditableText value={data.email} onChange={onChange('email')} />
           </a>
+          {(data.phone || true) && (
+            <span className="contact-link">
+              <EditableText value={data.phone || ''} onChange={onChange('phone')} style={{ minWidth: 80 }} />
+            </span>
+          )}
+          {(data.location || true) && (
+            <span className="contact-link">
+              <EditableText value={data.location || ''} onChange={onChange('location')} style={{ minWidth: 80 }} />
+            </span>
+          )}
           <a href={data.linkedin} target="_blank" rel="noopener noreferrer" className="contact-link">
             <Linkedin className="contact-icon" />
             LinkedIn
