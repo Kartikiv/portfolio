@@ -195,7 +195,7 @@ const ResumePage = () => {
                     {job.location && <div className="r-job-sub">{job.location}</div>}
                     <ul className="r-bullets">
                       {(job.achievements || []).map((ach, ai) => (
-                        <li key={ai} dangerouslySetInnerHTML={{ __html: ach }} />
+                        <li key={ai}><span dangerouslySetInnerHTML={{ __html: ach }} /></li>
                       ))}
                     </ul>
                   </div>
@@ -229,7 +229,7 @@ const ResumePage = () => {
                     {(p.highlights || []).length > 0 && (
                       <ul className="r-bullets">
                         {p.highlights.map((h, hi) => (
-                          <li key={hi} dangerouslySetInnerHTML={{ __html: h }} />
+                          <li key={hi}><span dangerouslySetInnerHTML={{ __html: h }} /></li>
                         ))}
                       </ul>
                     )}
@@ -251,7 +251,7 @@ const ResumePage = () => {
                     {(e.achievements || []).length > 0 && (
                       <ul className="r-bullets" style={{ marginTop: '2px' }}>
                         {e.achievements.map((ach, ai) => (
-                          <li key={ai} dangerouslySetInnerHTML={{ __html: ach }} />
+                          <li key={ai}><span dangerouslySetInnerHTML={{ __html: ach }} /></li>
                         ))}
                       </ul>
                     )}
@@ -287,7 +287,7 @@ const ResumePage = () => {
                       {item.bullets && item.bullets.length > 0 && (
                         <ul className="r-bullets">
                           {item.bullets.map((b, bi) => (
-                            <li key={bi} dangerouslySetInnerHTML={{ __html: b }} />
+                            <li key={bi}><span dangerouslySetInnerHTML={{ __html: b }} /></li>
                           ))}
                         </ul>
                       )}
