@@ -99,13 +99,16 @@ const ResumePage = () => {
         }
 
         /* Header */
-        .r-name { font-size: 20pt; font-weight: 700; margin-bottom: 3px; text-align: center; }
+        .r-name { font-size: 20pt; font-weight: 700; margin-bottom: 4px; text-align: center; }
         .r-contact {
-          display: flex; flex-wrap: wrap; gap: 3px 0;
-          font-size: 8.5pt; color: #555; justify-content: center; margin-bottom: 2px;
+          display: flex; flex-wrap: wrap; gap: 0;
+          font-size: 9pt; font-weight: 700; color: #222;
+          justify-content: center; margin-bottom: 3px; align-items: center;
         }
-        .r-contact > * + *::before { content: " | "; white-space: pre; color: #555; }
-        .r-contact a, a { color: #1a56db; text-decoration: underline; }
+        .r-contact > * { padding: 0 6px; }
+        .r-contact > * + * { border-left: 1.5px solid #555; }
+        .r-contact a { color: #1a56db; text-decoration: underline; font-weight: 700; }
+        .r-contact span { color: #222; }
 
         /* Divider */
         .r-divider { border: none; border-top: 1px solid #222; margin: 5px 0; }
@@ -179,6 +182,7 @@ const ResumePage = () => {
             {contact.location && <span>{contact.location}</span>}
             {contact.linkedin && <a href={contact.linkedin} target="_blank" rel="noreferrer">{contact.linkedin.replace(/https?:\/\/(www\.)?/, '')}</a>}
             {contact.github   && <a href={contact.github}   target="_blank" rel="noreferrer">{contact.github.replace(/https?:\/\/(www\.)?/, '')}</a>}
+            {contact.website  && <a href={contact.website}  target="_blank" rel="noreferrer">{contact.website.replace(/https?:\/\/(www\.)?/, '')}</a>}
           </div>
           <hr className="r-divider" />
 
