@@ -23,7 +23,7 @@ const ICON_SLUG = {
 const ICON_MAP = { Code2, Network, Database, Cloud, Brain, Cpu };
 
 const SkillTag = ({ skill }) => {
-  const slug = ICON_SLUG[skill] || skill.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const slug = ICON_SLUG[skill] || null;
   const [imgError, setImgError] = useState(false);
   return (
     <span className="skill-tag">
@@ -37,7 +37,7 @@ const SkillTag = ({ skill }) => {
 
 const DraggableSkillItem = ({ skill, onRemove }) => {
   const controls = useDragControls();
-  const slug = ICON_SLUG[skill] || skill.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const slug = ICON_SLUG[skill] || null;
   const [imgError, setImgError] = useState(false);
   return (
     <Reorder.Item

@@ -80,12 +80,29 @@ const migrations = [
     },
   },
 
+  {
+    id: 'site_events_table',
+    description: 'Create time-series site_events table for analytics',
+    async run(client) {
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS site_events (
+          id         BIGSERIAL    PRIMARY KEY,
+          event_type VARCHAR(50)  NOT NULL,
+          event_key  VARCHAR(100) NOT NULL,
+          created_at TIMESTAMPTZ  DEFAULT NOW()
+        )
+      `);
+      await client.query(`
+        CREATE INDEX IF NOT EXISTS site_events_created_idx  ON site_events (created_at)
+      `);
+      await client.query(`
+        CREATE INDEX IF NOT EXISTS site_events_type_key_idx ON site_events (event_type, event_key)
+      `);
+      console.log('  ✓ site_events table and indexes ready');
+    },
+  },
+
   // ── Add future migrations here ────────────────────────────────────────────
-  // {
-  //   id: 'my_next_migration',
-  //   description: '...',
-  //   async run(client) { ... },
-  // },
 ];
 
 // ── Runner ───────────────────────────────────────────────────────────────────

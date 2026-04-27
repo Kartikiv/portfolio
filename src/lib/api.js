@@ -35,8 +35,8 @@ export const trackEvent = (type, key) =>
     body: JSON.stringify({ type, key }),
   }).catch(() => {}); // fire-and-forget, never block UI
 
-export const getMetrics = (token) =>
-  request('/api/metrics', {
+export const getMetrics = (token, range = '7d') =>
+  request(`/api/metrics?range=${range}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
