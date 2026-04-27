@@ -13,6 +13,7 @@
     "server": "cd server && node index.js",
     "server:dev": "cd server && npx nodemon index.js",
     "seed": "cd server && node seed.js",
+    "migrate": "cd server && node migrate.js",
     "dev:all": "concurrently \"npm run dev\" \"npm run server:dev\""
   },
   "dependencies": {

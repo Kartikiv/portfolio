@@ -72,10 +72,16 @@ export function EditProvider({ children }) {
 
   const discardChanges = () => { setPending({}); setEditMode(false); };
 
+  const refreshContent = useCallback(async () => {
+    const data = await getContent();
+    setContent(data);
+    setPending({});
+  }, []);
+
   return (
     <EditContext.Provider value={{
       isLoggedIn, editMode, setEditMode, token, setLoginToken, logout,
-      getSection, updateField, saveAll, discardChanges,
+      getSection, updateField, saveAll, discardChanges, refreshContent,
       saving, loading, hasPendingChanges: Object.keys(pending).length > 0,
     }}>
       {children}

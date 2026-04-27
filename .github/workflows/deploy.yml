@@ -18,3 +18,4 @@ jobs:
           script: |
             set -e
             /home/ubuntu/deploy_react.sh
+            cd /home/ubuntu/portfolio && npm run migrate

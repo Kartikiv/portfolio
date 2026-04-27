@@ -27,6 +27,9 @@ cd server
 npm ci
 cd ..
 
+echo "==> Running migrations (safe, never overwrites existing content)..."
+npm run migrate
+
 echo "==> Restarting service..."
 sudo systemctl restart "$SERVICE_NAME"
 sudo systemctl status "$SERVICE_NAME" --no-pager

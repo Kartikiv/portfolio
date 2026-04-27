@@ -12,6 +12,33 @@ const sections = {
     subtitle: 'Building Scalable Systems & Intelligent Solutions',
     description:
       'Software Engineer with 3+ years of industry experience and a clear focus on delivering systems that scale in real-world environments. Drawn to hard problems at the intersection of systems and machine learning, with a focus on building adaptive, resilient platforms. Past experience includes building and maintaining large scale distributed systems that support entire Australian healthcare and enabling data processing for machine learning.',
+    typewriterPhrases: [
+      'Building Scalable Systems & Intelligent Solutions',
+      'Distributed Systems Engineer',
+      'ML Infrastructure Architect',
+      'Open to New Opportunities',
+    ],
+    marquee: [
+      { slug: 'openjdk',        name: 'Java' },
+      { slug: 'python',         name: 'Python' },
+      { slug: 'springboot',     name: 'Spring Boot' },
+      { slug: 'typescript',     name: 'TypeScript' },
+      { slug: 'postgresql',     name: 'PostgreSQL' },
+      { slug: 'docker',         name: 'Docker' },
+      { slug: 'kubernetes',     name: 'Kubernetes' },
+      { slug: 'terraform',      name: 'Terraform' },
+      { slug: 'mongodb',        name: 'MongoDB' },
+      { slug: 'react',          name: 'React' },
+      { slug: 'go',             name: 'Go' },
+      { slug: 'rust',           name: 'Rust' },
+      { slug: 'pytorch',        name: 'PyTorch' },
+      { slug: 'githubactions',  name: 'CI/CD' },
+      { slug: 'apachekafka',    name: 'Kafka' },
+      { slug: 'grafana',        name: 'Grafana' },
+      { slug: 'elasticsearch',  name: 'Elasticsearch' },
+      { slug: 'nginx',          name: 'Nginx' },
+      { slug: 'postman',        name: 'Postman' },
+    ],
   },
 
   skills: {
