@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Edit3, Save, X, LogOut, Shield, BarChart2, Layers } from 'lucide-react';
+import { Edit3, Save, X, LogOut, Shield, BarChart2, Layers, FileJson } from 'lucide-react';
 import { useEdit } from '../context/EditContext';
 import MetricsPanel from './MetricsPanel';
 import BatchUpdateModal from './BatchUpdateModal';
+import SchemaPanel from './SchemaPanel';
 
 export default function AdminBar() {
   const { isLoggedIn, editMode, setEditMode, saveAll, discardChanges, logout, saving, hasPendingChanges } = useEdit();
   const [showMetrics, setShowMetrics] = useState(false);
   const [showBatchUpdate, setShowBatchUpdate] = useState(false);
+  const [showSchema, setShowSchema] = useState(false);
 
   return (
     <>
@@ -41,6 +43,14 @@ export default function AdminBar() {
                 title="Batch Update Resume"
               >
                 <Layers size={14} /> <span className="admin-btn-text">Batch Update</span>
+              </button>
+
+              <button
+                className={`admin-btn admin-btn-schema${showSchema ? ' active' : ''}`}
+                onClick={() => setShowSchema((v) => !v)}
+                title="Section Structure Reference"
+              >
+                <FileJson size={14} /> <span className="admin-btn-text">Schema</span>
               </button>
 
               {!editMode ? (
@@ -80,6 +90,12 @@ export default function AdminBar() {
       <AnimatePresence>
         {isLoggedIn && showBatchUpdate && (
           <BatchUpdateModal onClose={() => setShowBatchUpdate(false)} />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isLoggedIn && showSchema && (
+          <SchemaPanel onClose={() => setShowSchema(false)} />
         )}
       </AnimatePresence>
     </>

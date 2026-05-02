@@ -36,12 +36,14 @@ export function EditProvider({ children }) {
   const setLoginToken = (t) => {
     setTokenState(t);
     localStorage.setItem('portfolio_token', t);
+    localStorage.setItem('portfolio_owner', 'true'); // persists across logouts
   };
 
   const logout = () => {
     setTokenState(null);
     setEditMode(false);
     localStorage.removeItem('portfolio_token');
+    // portfolio_owner intentionally kept — prevents self-tracking after logout
   };
 
   // pending > DB — no static fallback
@@ -64,7 +66,14 @@ export function EditProvider({ children }) {
       setPending({});
       setEditMode(false);
     } catch (err) {
-      alert(`Save failed: ${err.message}`);
+      const schema = err.details?.expected_structure;
+      if (schema) {
+        alert(
+          `Save failed: ${err.message}\n\nExpected structure:\n${JSON.stringify(schema, null, 2)}`
+        );
+      } else {
+        alert(`Save failed: ${err.message}`);
+      }
     } finally {
       setSaving(false);
     }

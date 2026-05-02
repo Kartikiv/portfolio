@@ -47,7 +47,7 @@ const SECTION_LABELS = {
 function useAnalytics() {
   const { isLoggedIn } = useEdit();
   useEffect(() => {
-    if (isLoggedIn) return;
+    if (isLoggedIn || localStorage.getItem('portfolio_owner') === 'true') return;
     trackEvent('page_view', 'portfolio');
 
     const seen = new Set();
@@ -57,7 +57,7 @@ function useAnalytics() {
           const id = entry.target.id;
           if (entry.isIntersecting && id && !seen.has(id)) {
             seen.add(id);
-            if (!isLoggedIn) trackEvent('section_view', id);
+            trackEvent('section_view', id);
           }
         });
       },

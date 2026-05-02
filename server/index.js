@@ -2,6 +2,7 @@ require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 
 const express = require('express');
 const cors = require('cors');
+const migrate = require('./migrate');
 
 const authRoutes = require('./routes/auth');
 const contentRoutes = require('./routes/content');
@@ -24,6 +25,14 @@ app.use('/api/metrics', metricsRoutes);
 app.get('/api/health', (_, res) => res.json({ status: 'ok' }));
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Portfolio API running on http://localhost:${PORT}`);
-});
+
+migrate()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Portfolio API running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('Startup migration failed:', err.message);
+    process.exit(1);
+  });

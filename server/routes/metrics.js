@@ -2,23 +2,7 @@ const router = require('express').Router();
 const db = require('../db');
 const requireAuth = require('../middleware/auth');
 
-// ── Schema ───────────────────────────────────────────────────────────────────
-async function ensureTable() {
-  await db.query(`
-    CREATE TABLE IF NOT EXISTS site_events (
-      id         BIGSERIAL    PRIMARY KEY,
-      event_type VARCHAR(50)  NOT NULL,
-      event_key  VARCHAR(100) NOT NULL,
-      created_at TIMESTAMPTZ  DEFAULT NOW()
-    )
-  `);
-  await db.query(`
-    CREATE INDEX IF NOT EXISTS site_events_created_idx ON site_events (created_at);
-  `);
-  await db.query(`
-    CREATE INDEX IF NOT EXISTS site_events_type_key_idx ON site_events (event_type, event_key);
-  `);
-}
+const TZ = 'America/Los_Angeles';
 
 // ── Range helper ─────────────────────────────────────────────────────────────
 function intervalFor(range) {
@@ -28,7 +12,6 @@ function intervalFor(range) {
 // ── POST /api/metrics/event — public ────────────────────────────────────────
 router.post('/event', async (req, res) => {
   try {
-    await ensureTable();
     const { type, key } = req.body;
     if (!type || !key) return res.status(400).json({ error: 'type and key required' });
     await db.query(
@@ -44,15 +27,10 @@ router.post('/event', async (req, res) => {
 // ── GET /api/metrics?range=24h|7d|30d|all — protected ───────────────────────
 router.get('/', requireAuth, async (req, res) => {
   try {
-    await ensureTable();
-
     const range    = ['24h', '7d', '30d', 'all'].includes(req.query.range) ? req.query.range : '7d';
     const interval = intervalFor(range);
 
-    // WHERE clause — parameterised via $1
-    const where = interval
-      ? `WHERE created_at > NOW() - $1::interval`
-      : `WHERE 1=1`;
+    const where  = interval ? `WHERE created_at > NOW() - $1::interval` : `WHERE 1=1`;
     const params = interval ? [interval] : [];
 
     // 1. Totals per event type
@@ -61,7 +39,7 @@ router.get('/', requireAuth, async (req, res) => {
       params
     );
 
-    // 2. Top keys per type (max 20 per type)
+    // 2. Top keys per type
     const byKey = await db.query(
       `SELECT event_type, event_key, COUNT(*) AS count
        FROM site_events ${where}
@@ -70,22 +48,22 @@ router.get('/', requireAuth, async (req, res) => {
       params
     );
 
-    // 3. Daily breakdown — group by UTC date + event_type
+    // 3. Daily breakdown — grouped by date in local timezone
     const daily = await db.query(
       `SELECT
-         TO_CHAR(DATE_TRUNC('day', created_at), 'YYYY-MM-DD') AS date,
+         TO_CHAR(DATE_TRUNC('day', created_at AT TIME ZONE '${TZ}'), 'YYYY-MM-DD') AS date,
          event_type,
          COUNT(*) AS count
        FROM site_events ${where}
-       GROUP BY date, event_type
-       ORDER BY date ASC`,
+       GROUP BY 1, event_type
+       ORDER BY 1 ASC`,
       params
     );
 
-    // 4. 4-hour traffic buckets (0 = 12am-4am … 5 = 8pm-12am), all types combined
+    // 4. 4-hour traffic buckets (0 = 12am–4am … 5 = 8pm–12am) in local timezone
     const buckets = await db.query(
       `SELECT
-         FLOOR(EXTRACT(HOUR FROM created_at) / 4)::int AS bucket,
+         FLOOR(EXTRACT(HOUR FROM (created_at AT TIME ZONE '${TZ}')) / 4)::int AS bucket,
          COUNT(*) AS count
        FROM site_events ${where}
        GROUP BY bucket
@@ -93,10 +71,10 @@ router.get('/', requireAuth, async (req, res) => {
       params
     );
 
-    // 5. Hourly breakdown for 24h view
+    // 5. Hourly breakdown for 24h view in local timezone
     const hourly = await db.query(
       `SELECT
-         EXTRACT(HOUR FROM created_at)::int AS hour,
+         EXTRACT(HOUR FROM (created_at AT TIME ZONE '${TZ}'))::int AS hour,
          event_type,
          COUNT(*) AS count
        FROM site_events ${where}
@@ -121,7 +99,6 @@ router.get('/', requireAuth, async (req, res) => {
 // ── DELETE /api/metrics/reset — protected ───────────────────────────────────
 router.delete('/reset', requireAuth, async (req, res) => {
   try {
-    await ensureTable();
     await db.query('DELETE FROM site_events');
     res.json({ ok: true });
   } catch (err) {

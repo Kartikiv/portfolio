@@ -1,10 +1,17 @@
 const BASE = import.meta.env.VITE_API_URL || '';
 
+class ApiError extends Error {
+  constructor(message, details) {
+    super(message);
+    this.details = details; // full server response body, may include expected_structure
+  }
+}
+
 async function request(path, options = {}) {
   const res = await fetch(`${BASE}${path}`, options);
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: res.statusText }));
-    throw new Error(err.error || 'Request failed');
+    const body = await res.json().catch(() => ({ error: res.statusText }));
+    throw new ApiError(body.error || 'Request failed', body);
   }
   return res.json();
 }
